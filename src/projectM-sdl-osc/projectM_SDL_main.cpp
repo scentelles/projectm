@@ -30,27 +30,67 @@
 * 
 *
 */
+#include <thread>         // std::thread
 
 #include "pmSDL.hpp"
 
-#if OGL_DEBUG
-void DebugLog(GLenum source,
-               GLenum type,
-               GLuint id,
-               GLenum severity,
-               GLsizei length,
-               const GLchar* message,
-               const void* userParam) {
+#define OSCPKT_OSTREAM_OUTPUT
+#include "oscpkt/oscpkt.hh"
+#include "oscpkt/udp.hh"
+using namespace oscpkt;
+const int PORT_NUM = 7700;
 
-    /*if (type != GL_DEBUG_TYPE_OTHER)*/ 
-	{
-        std::cerr << " -- \n" << "Type: " <<
-           type << "; Source: " <<
-           source <<"; ID: " << id << "; Severity: " <<
-           severity << "\n" << message << "\n";
-       }
- }
-#endif
+
+    projectMSDL *app;
+    
+using std::endl;
+using std::cout;
+using std::cerr;    
+
+bool changePresetRequest = false;
+unsigned int presetRequested = 0;
+
+void runOSCServer() {
+  UdpSocket sock; 
+  sock.bindTo(PORT_NUM);
+  if (!sock.isOk()) {
+    cerr << "Error opening port " << PORT_NUM << ": " << sock.errorMessage() << "\n";
+  } 
+  else 
+  {
+    cout << "Server started, will listen to packets on port " << PORT_NUM << std::endl;
+    PacketReader pr;
+    PacketWriter pw;
+    while (sock.isOk()) {      
+      if (sock.receiveNextPacket(30 /* timeout, in ms */)) {
+        pr.init(sock.packetData(), sock.packetSize());
+        oscpkt::Message *msg;
+        while (pr.isOk() && (msg = pr.popMessage()) != 0) {
+          int iarg;
+	  cout << "Received OSC. STarting parsing" << msg->address <<endl;
+          if (msg->match("/FOG/multipush1/1/1")) {
+               cout << "Server: received touchOSC event request " << msg->address << " from " << sock.packetOrigin() << "\n";
+		changePresetRequest = true;
+		presetRequested +=10;
+
+	   }
+//          if (msg->match("/FOG/multipush1/2/1").popInt32(iarg).isOkNoMoreArgs()) {
+          if (msg->match("/FOG/multipush1/2/1")) {
+               cout << "Server: received touchOSC event request 2 " << iarg << " from " << sock.packetOrigin() << "\n";
+		changePresetRequest = true;
+		presetRequested -=10;
+
+	   }
+          }
+        }
+      }
+    }
+  
+}
+
+
+
+
 
 // return path to config file to use
 std::string getConfigFilePath(std::string datadir_path) {
@@ -78,168 +118,19 @@ std::string getConfigFilePath(std::string datadir_path) {
 }
 
 
-// ref https://blogs.msdn.microsoft.com/matthew_van_eerde/2008/12/16/sample-wasapi-loopback-capture-record-what-you-hear/
-#ifdef WASAPI_LOOPBACK
 
-HRESULT get_default_device(IMMDevice **ppMMDevice) {
-	HRESULT hr = S_OK;
-	IMMDeviceEnumerator *pMMDeviceEnumerator;
 
-	// activate a device enumerator
-	hr = CoCreateInstance(
-		__uuidof(MMDeviceEnumerator), NULL, CLSCTX_ALL,
-		__uuidof(IMMDeviceEnumerator),
-		(void**)&pMMDeviceEnumerator
-	);
-	if (FAILED(hr)) {
-		ERR(L"CoCreateInstance(IMMDeviceEnumerator) failed: hr = 0x%08x", hr);
-		return hr;
-	}
 
-	// get the default render endpoint
-	hr = pMMDeviceEnumerator->GetDefaultAudioEndpoint(eRender, eConsole, ppMMDevice);
-	if (FAILED(hr)) {
-		ERR(L"IMMDeviceEnumerator::GetDefaultAudioEndpoint failed: hr = 0x%08x", hr);
-		return hr;
-	}
-
-	return S_OK;
-}
-
-#endif /** WASAPI_LOOPBACK */
 
 int main(int argc, char *argv[]) {
+
+  std::thread ocsThread (runOSCServer); 
+
+
 #ifndef WIN32
 srand((int)(time(NULL)));
 #endif
 
-#ifdef WASAPI_LOOPBACK
-	HRESULT hr;
-
-    hr = CoInitialize(NULL);
-    if (FAILED(hr)) {
-        ERR(L"CoInitialize failed: hr = 0x%08x", hr);
-    }
-
-
-	IMMDevice *pMMDevice(NULL);
-    // open default device if not specified
-    if (NULL == pMMDevice) {
-        hr = get_default_device(&pMMDevice);
-        if (FAILED(hr)) {
-            return hr;
-        }
-    }
-
-	bool bInt16 = false;
-    UINT32 foo = 0;
-	PUINT32 pnFrames = &foo;
-
-	// activate an IAudioClient
-	IAudioClient *pAudioClient;
-	hr = pMMDevice->Activate(
-		__uuidof(IAudioClient),
-		CLSCTX_ALL, NULL,
-		(void**)&pAudioClient
-	);
-	if (FAILED(hr)) {
-		ERR(L"IMMDevice::Activate(IAudioClient) failed: hr = 0x%08x", hr);
-		return hr;
-	}
-
-	// get the default device periodicity
-	REFERENCE_TIME hnsDefaultDevicePeriod;
-	hr = pAudioClient->GetDevicePeriod(&hnsDefaultDevicePeriod, NULL);
-	if (FAILED(hr)) {
-		ERR(L"IAudioClient::GetDevicePeriod failed: hr = 0x%08x", hr);
-		return hr;
-	}
-
-	// get the default device format
-	WAVEFORMATEX *pwfx;
-	hr = pAudioClient->GetMixFormat(&pwfx);
-	if (FAILED(hr)) {
-		ERR(L"IAudioClient::GetMixFormat failed: hr = 0x%08x", hr);
-		return hr;
-	}
-
-	if (bInt16) {
-		// coerce int-16 wave format
-		// can do this in-place since we're not changing the size of the format
-		// also, the engine will auto-convert from float to int for us
-		switch (pwfx->wFormatTag) {
-		case WAVE_FORMAT_IEEE_FLOAT:
-			pwfx->wFormatTag = WAVE_FORMAT_PCM;
-			pwfx->wBitsPerSample = 16;
-			pwfx->nBlockAlign = pwfx->nChannels * pwfx->wBitsPerSample / 8;
-			pwfx->nAvgBytesPerSec = pwfx->nBlockAlign * pwfx->nSamplesPerSec;
-			break;
-
-		case WAVE_FORMAT_EXTENSIBLE:
-		{
-			// naked scope for case-local variable
-			PWAVEFORMATEXTENSIBLE pEx = reinterpret_cast<PWAVEFORMATEXTENSIBLE>(pwfx);
-			if (IsEqualGUID(KSDATAFORMAT_SUBTYPE_IEEE_FLOAT, pEx->SubFormat)) {
-				pEx->SubFormat = KSDATAFORMAT_SUBTYPE_PCM;
-				pEx->Samples.wValidBitsPerSample = 16;
-				pwfx->wBitsPerSample = 16;
-				pwfx->nBlockAlign = pwfx->nChannels * pwfx->wBitsPerSample / 8;
-				pwfx->nAvgBytesPerSec = pwfx->nBlockAlign * pwfx->nSamplesPerSec;
-			}
-			else {
-				ERR(L"%s", L"Don't know how to coerce mix format to int-16");
-				return E_UNEXPECTED;
-			}
-		}
-		break;
-
-		default:
-			ERR(L"Don't know how to coerce WAVEFORMATEX with wFormatTag = 0x%08x to int-16", pwfx->wFormatTag);
-			return E_UNEXPECTED;
-		}
-	}
-        
-	UINT32 nBlockAlign = pwfx->nBlockAlign;
-	*pnFrames = 0;
-
-	// call IAudioClient::Initialize
-	// note that AUDCLNT_STREAMFLAGS_LOOPBACK and AUDCLNT_STREAMFLAGS_EVENTCALLBACK
-	// do not work together...
-	// the "data ready" event never gets set
-	// so we're going to do a timer-driven loop
-	hr = pAudioClient->Initialize(
-		AUDCLNT_SHAREMODE_SHARED,
-		AUDCLNT_STREAMFLAGS_LOOPBACK,
-		0, 0, pwfx, 0
-	);
-	if (FAILED(hr)) {
-		ERR(L"pAudioClient->Initialize error");
-		return hr;
-	}
-
-	// activate an IAudioCaptureClient
-	IAudioCaptureClient *pAudioCaptureClient;
-	hr = pAudioClient->GetService(
-		__uuidof(IAudioCaptureClient),
-		(void**)&pAudioCaptureClient
-	);
-	if (FAILED(hr)) {
-		ERR(L"pAudioClient->GetService error");
-		return hr;
-	}
-
-	// call IAudioClient::Start
-	hr = pAudioClient->Start();
-	if (FAILED(hr)) {
-		ERR(L"pAudioClient->Start error");
-		return hr;
-	}
-
-	bool bDone = false;
-	bool bFirstPacket = true;
-    UINT32 nPasses = 0;
-
-#endif /** WASAPI_LOOPBACK */
 
 #if UNLOCK_FPS
     setenv("vblank_mode", "0", 1);
@@ -253,50 +144,31 @@ srand((int)(time(NULL)));
 
     // default window size to usable bounds (e.g. minus menubar and dock)
     SDL_Rect initialWindowBounds;
-#if SDL_VERSION_ATLEAST(2, 0, 5)
+
     // new and better
     SDL_GetDisplayUsableBounds(0, &initialWindowBounds);
-#else
-    SDL_GetDisplayBounds(0, &initialWindowBounds);
-#endif
-    int width = initialWindowBounds.w;
-    int height = initialWindowBounds.h;
 
-#ifdef USE_GLES
+  //  int width = initialWindowBounds.w;
+  //  int height = initialWindowBounds.h;
+   // int width = 384;
+   // int height = 96;
+    //int width = 128;
+    //int height = 64;
+    int width = 128;
+    int height = 128;
+
+
     // use GLES 2.0 (this may need adjusting)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
 
-#else
-	// Disabling compatibility profile
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-#endif
-
-    
     SDL_Window *win = SDL_CreateWindow("projectM", 0, 0, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
     
     SDL_GL_GetDrawableSize(win,&width,&height);
     
-#if STEREOSCOPIC_SBS
-
-	// enable stereo
-	if (SDL_GL_SetAttribute(SDL_GL_STEREO, 1) == 0) 
-	{
-		SDL_Log("SDL_GL_STEREO: true");
-	}
-
-	// requires fullscreen mode
-	SDL_ShowCursor(false);
-	SDL_SetWindowFullscreen(win, SDL_WINDOW_FULLSCREEN);
-
-#endif
-
-
-	SDL_GLContext glCtx = SDL_GL_CreateContext(win);
+    SDL_GLContext glCtx = SDL_GL_CreateContext(win);
 
 
     SDL_Log("GL_VERSION: %s", glGetString(GL_VERSION));
@@ -312,7 +184,7 @@ srand((int)(time(NULL)));
     }
 
     
-    projectMSDL *app;
+
     
     std::string base_path = DATADIR_PATH;
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Using data directory: %s\n", base_path.c_str());
@@ -328,28 +200,15 @@ srand((int)(time(NULL)));
         base_path = SDL_GetBasePath();
         SDL_Log("Config file not found, using built-in settings. Data directory=%s\n", base_path.c_str());
 
-		// Get max refresh rate from attached displays to use as built-in max FPS.
-		int i = 0;
-		int maxRefreshRate = 0;
-		SDL_DisplayMode current;
-		for (i = 0; i < SDL_GetNumVideoDisplays(); ++i)
-		{
-			if (SDL_GetCurrentDisplayMode(i, &current) == 0)
-			{
-				if (current.refresh_rate > maxRefreshRate) maxRefreshRate = current.refresh_rate;
-			}
-		}
-		if (maxRefreshRate <= 60) maxRefreshRate = 60;
-
         float heightWidthRatio = (float)height / (float)width;
         projectM::Settings settings;
         settings.windowWidth = width;
         settings.windowHeight = height;
         settings.meshX = 128;
         settings.meshY = settings.meshX * heightWidthRatio;
-		settings.fps = maxRefreshRate;
+        settings.fps   = 60;
         settings.smoothPresetDuration = 3; // seconds
-        settings.presetDuration = 22; // seconds
+        settings.presetDuration = 0; // seconds
         settings.beatSensitivity = 0.8;
         settings.aspectCorrection = 1;
         settings.shuffleEnabled = 1;
@@ -362,17 +221,9 @@ srand((int)(time(NULL)));
         // init with settings
         app = new projectMSDL(settings, 0);
     }
-    app->init(win, &glCtx);
+    app->init(win, &glCtx );
+//    app->init(win, &glCtx, true);
 
-#if STEREOSCOPIC_SBS
-	app->toggleFullScreen();
-#endif
-
-#if OGL_DEBUG && !USE_GLES
-    glEnable(GL_DEBUG_OUTPUT);
-    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-    glDebugMessageCallback(DebugLog, NULL);
-#endif
 
 #if !FAKE_AUDIO && !WASAPI_LOOPBACK
     // get an audio input device
@@ -413,56 +264,30 @@ srand((int)(time(NULL)));
         fps = 60;
     const Uint32 frame_delay = 1000/fps;
     Uint32 last_time = SDL_GetTicks();
+    
+    app->resize(width,height);
+    
+
+int count = 0;    
     while (! app->done) {
+
+count++;
+
+  if(changePresetRequest == true)
+  {
+  
+  		
+                changePresetRequest = false;
+		unsigned int index;
+		app->selectedPresetIndex(index);
+		std::cout << "Current Index : " << index << " / " << app->getPlaylistSize() << "\n";
+		std::cout << "Change Index to  : " << presetRequested << "\n";
+  		app->selectPreset(presetRequested, false);
+
+  
+  }
+
         app->renderFrame();
-#if FAKE_AUDIO
-        app->addFakePCM();
-#endif
-#ifdef WASAPI_LOOPBACK
-        // drain data while it is available
-        nPasses++;
-		UINT32 nNextPacketSize;
-		for (
-			hr = pAudioCaptureClient->GetNextPacketSize(&nNextPacketSize);
-			SUCCEEDED(hr) && nNextPacketSize > 0;
-			hr = pAudioCaptureClient->GetNextPacketSize(&nNextPacketSize)
-			) {
-			// get the captured data
-			BYTE *pData;
-			UINT32 nNumFramesToRead;
-			DWORD dwFlags;
-
-			hr = pAudioCaptureClient->GetBuffer(
-				&pData,
-				&nNumFramesToRead,
-				&dwFlags,
-				NULL,
-				NULL
-			);
-			if (FAILED(hr)) {
-				return hr;
-			}
-
-			LONG lBytesToWrite = nNumFramesToRead * nBlockAlign;
-
-			/** Add the waveform data */
-			app->pcm()->addPCMfloat((float *)pData, nNumFramesToRead);
-
-			*pnFrames += nNumFramesToRead;
-
-			hr = pAudioCaptureClient->ReleaseBuffer(nNumFramesToRead);
-			if (FAILED(hr)) {
-				return hr;
-			}
-
-			bFirstPacket = false;
-		}
-
-		if (FAILED(hr)) {
-			return hr;
-		}
-
-#endif /** WASAPI_LOOPBACK */
 
 #if UNLOCK_FPS
         frame_count++;
