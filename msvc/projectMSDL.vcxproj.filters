@@ -20,6 +20,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="..\src\projectM-sdl\oscpkt\oscpkt.hh" />
+    <ClInclude Include="..\src\projectM-sdl-osc\oscpkt\udp.hh" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="..\fonts\Vera.ttf" />

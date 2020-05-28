@@ -1,88 +1,38 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\SOIL2\*.c" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-    <ClCompile Include="$(MSBuildThisFileDirectory)../src\libprojectM\Renderer\hlslparser\src\*.cpp" />
-  </ItemGroup>
-  <ItemGroup>
     <Filter Include="Source Files">
       <UniqueIdentifier>{086AAEDB-BC71-3D4F-A2E4-9BA153078E68}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\libprojectM\Renderer\BeatDetect.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\Filters.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\hlslparser\src\CodeWriter.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\hlslparser\src\Engine.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\hlslparser\src\GLSLGenerator.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\hlslparser\src\HLSLParser.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\hlslparser\src\HLSLTokenizer.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\hlslparser\src\HLSLTree.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\MilkdropWaveform.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\PerlinNoise.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\PerlinNoiseWithAlpha.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\PerPixelMesh.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\Pipeline.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\PipelineContext.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\Renderable.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\Renderer.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\RenderItemDistanceMetric.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\RenderItemMatcher.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\Shader.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\ShaderEngine.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\SOIL2\etc1_utils.c" />
+    <ClCompile Include="..\src\libprojectM\Renderer\SOIL2\image_DXT.c" />
+    <ClCompile Include="..\src\libprojectM\Renderer\SOIL2\image_helper.c" />
+    <ClCompile Include="..\src\libprojectM\Renderer\SOIL2\SOIL2.c" />
+    <ClCompile Include="..\src\libprojectM\Renderer\Texture.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\TextureManager.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\VideoEcho.cpp" />
+    <ClCompile Include="..\src\libprojectM\Renderer\Waveform.cpp" />
   </ItemGroup>
 </Project>

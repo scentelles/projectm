@@ -31,7 +31,71 @@
 *
 */
 
+
+#include "oscpkt/udp.hh"
+#include "oscpkt/oscpkt.hh"
+#define OSCPKT_OSTREAM_OUTPUT
+
 #include "pmSDL.hpp"
+#include <thread>  
+
+using namespace oscpkt;
+const int PORT_NUM = 7700;
+
+using std::endl;
+using std::cout;
+using std::cerr;  
+
+bool changePresetRequest = false;
+unsigned int presetRequested = 0;
+
+void runOSCServer()
+{
+	UdpSocket sock;
+	sock.bindTo(PORT_NUM);
+	if (!sock.isOk())
+	{
+		cerr << "Error opening port " << PORT_NUM << ": " << sock.errorMessage() << "\n";
+	}
+	else
+	{
+		cout << "Server started, will listen to packets on port " << PORT_NUM << std::endl;
+		PacketReader pr;
+		PacketWriter pw;
+		while (sock.isOk())
+		{
+			if (sock.receiveNextPacket(30 ))
+			{
+				pr.init(sock.packetData(), sock.packetSize());
+				oscpkt::Message *msg;
+				cout << "packet received" << endl;
+				while (pr.isOk() && (msg = pr.popMessage()) != 0)
+				{
+					int iarg;
+					cout << "Received OSC. STarting parsing" << msg->address << " message : " << msg << endl;
+					int newPreset;
+					if (msg->match("/projectm/preset").popInt32(newPreset))
+					{
+						cout << "Server: received preset change request : " << newPreset << " | " << msg->address.c_str() << " from "  << sock.packetOrigin().asString() << "\n";
+						changePresetRequest = true;
+						presetRequested = newPreset;
+					}
+					
+				}
+			}
+		}
+	}
+}
+
+
+
+
+
+
+
+
+
+
 
 #if OGL_DEBUG
 void DebugLog(GLenum source,
@@ -109,6 +173,10 @@ HRESULT get_default_device(IMMDevice **ppMMDevice) {
 #endif /** WASAPI_LOOPBACK */
 
 int main(int argc, char *argv[]) {
+
+  std::thread ocsThread(runOSCServer); 
+  ocsThread.detach();
+
 #ifndef WIN32
 srand((int)(time(NULL)));
 #endif
@@ -259,8 +327,14 @@ srand((int)(time(NULL)));
 #else
     SDL_GetDisplayBounds(0, &initialWindowBounds);
 #endif
-    int width = initialWindowBounds.w;
-    int height = initialWindowBounds.h;
+
+
+
+    //int width = initialWindowBounds.w;
+    //int height = initialWindowBounds.h;
+	//Force size to match with streaming resolution
+	int width = 640;
+	int height = 380;
 
 #ifdef USE_GLES
     // use GLES 2.0 (this may need adjusting)
@@ -414,6 +488,23 @@ srand((int)(time(NULL)));
     const Uint32 frame_delay = 1000/fps;
     Uint32 last_time = SDL_GetTicks();
     while (! app->done) {
+
+		  //Force preset change
+		  if (changePresetRequest == true)
+			{
+
+				changePresetRequest = false;
+				unsigned int index;
+				app->selectedPresetIndex(index);
+				std::cout << "Current Index : " << index << " / " << app->getPlaylistSize() << "\n";
+				std::cout << "Change Index to  : " << presetRequested << "\n";
+				app->selectPreset(presetRequested, false);
+			}
+
+
+
+
+
         app->renderFrame();
 #if FAKE_AUDIO
         app->addFakePCM();

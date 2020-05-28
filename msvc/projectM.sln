@@ -35,8 +35,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RovastarFractalSpiral", "Ro
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "RovastarFractopiaFrantic", "RovastarFractopiaFrantic.vcxproj", "{27DDCE71-E33B-3521-92B5-9918356D78A1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "projectMSDLOSC", "projectMSDL-OSC.vcxproj", "{3693ED75-3F55-4268-9797-851CF6BA1076}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -109,12 +107,6 @@ Global
 		{27DDCE71-E33B-3521-92B5-9918356D78A1}.Release|x64.ActiveCfg = Release|x64
 		{27DDCE71-E33B-3521-92B5-9918356D78A1}.Release|x64.Build.0 = Release|x64
 		{27DDCE71-E33B-3521-92B5-9918356D78A1}.Release|x86.ActiveCfg = Release|x64
-		{3693ED75-3F55-4268-9797-851CF6BA1076}.Debug|x64.ActiveCfg = Debug|x64
-		{3693ED75-3F55-4268-9797-851CF6BA1076}.Debug|x64.Build.0 = Debug|x64
-		{3693ED75-3F55-4268-9797-851CF6BA1076}.Debug|x86.ActiveCfg = Debug|x64
-		{3693ED75-3F55-4268-9797-851CF6BA1076}.Release|x64.ActiveCfg = Release|x64
-		{3693ED75-3F55-4268-9797-851CF6BA1076}.Release|x64.Build.0 = Release|x64
-		{3693ED75-3F55-4268-9797-851CF6BA1076}.Release|x86.ActiveCfg = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

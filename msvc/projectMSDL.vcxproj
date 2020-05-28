@@ -181,6 +181,8 @@
     </Image>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\src\projectM-sdl-osc\oscpkt\udp.hh" />
+    <ClInclude Include="..\src\projectM-sdl\oscpkt\oscpkt.hh" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
