@@ -47,6 +47,11 @@ using std::cout;
 using std::cerr;  
 
 bool changePresetRequest = false;
+bool changeRandom = false;
+bool randomValue = false;
+bool changeBeatSensitivity = false;
+bool beatSensitivityValue = false;
+
 unsigned int presetRequested = 0;
 
 void runOSCServer()
@@ -73,14 +78,27 @@ void runOSCServer()
 				{
 					int iarg;
 					cout << "Received OSC. STarting parsing" << msg->address << " message : " << msg << endl;
-					int newPreset;
-					if (msg->match("/projectm/preset").popInt32(newPreset))
+					int value;
+
+					if (msg->match("/projectm/preset").popInt32(value))
 					{
-						cout << "Server: received preset change request : " << newPreset << " | " << msg->address.c_str() << " from "  << sock.packetOrigin().asString() << "\n";
+						cout << "Server: received preset change request : " << value << " | "
+								 << msg->address.c_str() << " from " << sock.packetOrigin().asString() << "\n";
 						changePresetRequest = true;
-						presetRequested = newPreset;
+						presetRequested = value;
 					}
-					
+					if (msg->match("/projectm/random").popInt32(value))
+					{
+						cout << "Server: received random change request : " << value << endl;
+						randomValue = value;
+						changeRandom = true;
+					}
+					if (msg->match("/projectm/lock").popInt32(value))
+					{
+						cout << "Server: received random change request : " << value << endl;
+						randomValue = value;
+						changeRandom = true;
+					}					
 				}
 			}
 		}
@@ -330,11 +348,9 @@ srand((int)(time(NULL)));
 
 
 
-    //int width = initialWindowBounds.w;
-    //int height = initialWindowBounds.h;
-	//Force size to match with streaming resolution
-	int width = 640;
-	int height = 380;
+    int width = initialWindowBounds.w;
+    int height = initialWindowBounds.h;
+
 
 #ifdef USE_GLES
     // use GLES 2.0 (this may need adjusting)
@@ -388,7 +404,13 @@ srand((int)(time(NULL)));
     
     projectMSDL *app;
     
-    std::string base_path = DATADIR_PATH;
+	//#define WIN32
+#ifdef WIN32
+	std::string base_path = ".";
+#else
+	std::string base_path = DATADIR_PATH;
+#endif /** WIN32 */
+
     SDL_LogInfo(SDL_LOG_CATEGORY_APPLICATION, "Using data directory: %s\n", base_path.c_str());
 
     // load configuration file
@@ -398,6 +420,8 @@ srand((int)(time(NULL)));
         // found config file, use it
         app = new projectMSDL(configFilePath, 0);
         SDL_Log("Using config from %s", configFilePath.c_str());
+		SDL_SetWindowSize(win, app->settings().windowWidth, app->settings().windowHeight);
+				
     } else {
         base_path = SDL_GetBasePath();
         SDL_Log("Config file not found, using built-in settings. Data directory=%s\n", base_path.c_str());
@@ -500,8 +524,16 @@ srand((int)(time(NULL)));
 				std::cout << "Change Index to  : " << presetRequested << "\n";
 				app->selectPreset(presetRequested, false);
 			}
-
-
+			if (changeRandom == true)
+			{
+				cout << "Changing Random : " << randomValue << endl;
+				changeRandom = false;
+				app->selectRandom(randomValue);
+				//app->setPresetLock(!app->isPresetLocked());
+				//bool randomValue = false;
+				//bool changeBeatSensitivity = false;
+				//bool beatSensitivityValue = false;
+			}
 
 
 
