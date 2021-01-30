@@ -1,0 +1,35 @@
+The system is: Windows - 10.0.17134 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/bin/HostX64/x64/cl.exe 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+Compilateur d'optimisation Microsoft (R) C/C++ version 19.26.28805 pour x64
+Copyright (C) Microsoft Corporation. Tous droits réservés.
+
+CMakeCCompilerId.c
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.obj"
+
+The C compiler identification is MSVC, found in "C:/Users/az02098.CORP/source/repos/projectm/src/projectm-android/app/src/main/cpp/out/build/x64-Debug (par défaut)/CMakeFiles/3.17.20032601-MSVC_2/CompilerIdC/CMakeCCompilerId.obj"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler: C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/VC/Tools/MSVC/14.26.28801/bin/HostX64/x64/cl.exe 
+Build flags: 
+Id flags: -c 
+
+The output was:
+0
+Compilateur d'optimisation Microsoft (R) C/C++ version 19.26.28805 pour x64
+Copyright (C) Microsoft Corporation. Tous droits réservés.
+
+CMakeCXXCompilerId.cpp
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.obj"
+
+The CXX compiler identification is MSVC, found in "C:/Users/az02098.CORP/source/repos/projectm/src/projectm-android/app/src/main/cpp/out/build/x64-Debug (par défaut)/CMakeFiles/3.17.20032601-MSVC_2/CompilerIdCXX/CMakeCXXCompilerId.obj"
+

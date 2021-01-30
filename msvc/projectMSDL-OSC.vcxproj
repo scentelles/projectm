@@ -144,32 +144,6 @@
     <ClCompile Include="$(MSBuildThisFileDirectory)../src\projectM-sdl-osc\pmSDL.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="\MilkdropPresetFactory.vcxproj">
-      <Project>{EF3369C9-E934-3F1E-996B-21518B57A809}</Project>
-      <Name>MilkdropPresetFactory</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
-    <ProjectReference Include="\NativePresetFactory.vcxproj">
-      <Project>{E2D4CEE6-B8CB-32AC-8977-52A48C8DA4E1}</Project>
-      <Name>NativePresetFactory</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
-    <ProjectReference Include="\Renderer.vcxproj">
-      <Project>{07427FA1-1771-3A2D-9183-167A8345DEEB}</Project>
-      <Name>Renderer</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
-    <ProjectReference Include="\projectM.vcxproj">
-      <Project>{DABC69A6-66C3-392C-8A62-EC989B0850A4}</Project>
-      <Name>projectM</Name>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -188,6 +162,20 @@
       <DeploymentContent>true</DeploymentContent>
       <FileType>Font</FileType>
     </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="MilkdropPresetFactory.vcxproj">
+      <Project>{ef3369c9-e934-3f1e-996b-21518b57a809}</Project>
+    </ProjectReference>
+    <ProjectReference Include="NativePresetFactory.vcxproj">
+      <Project>{e2d4cee6-b8cb-32ac-8977-52a48c8da4e1}</Project>
+    </ProjectReference>
+    <ProjectReference Include="projectM.vcxproj">
+      <Project>{dabc69a6-66c3-392c-8a62-ec989b0850a4}</Project>
+    </ProjectReference>
+    <ProjectReference Include="Renderer.vcxproj">
+      <Project>{07427fa1-1771-3a2d-9183-167a8345deeb}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

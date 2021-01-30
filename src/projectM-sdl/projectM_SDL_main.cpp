@@ -47,12 +47,16 @@ using std::cout;
 using std::cerr;  
 
 bool changePresetRequest = false;
+unsigned int presetRequested = 0;
+
+bool changeLock = false;
+bool lockValue = false;
 bool changeRandom = false;
 bool randomValue = false;
 bool changeBeatSensitivity = false;
 bool beatSensitivityValue = false;
 
-unsigned int presetRequested = 0;
+
 
 void runOSCServer()
 {
@@ -87,18 +91,20 @@ void runOSCServer()
 						changePresetRequest = true;
 						presetRequested = value;
 					}
+					if (msg->match("/projectm/lock").popInt32(value))
+					{
+						cout << "Server: received lock change request : " << value << endl;
+						lockValue = value;
+						changeLock = true;
+					}
 					if (msg->match("/projectm/random").popInt32(value))
 					{
 						cout << "Server: received random change request : " << value << endl;
 						randomValue = value;
 						changeRandom = true;
 					}
-					if (msg->match("/projectm/lock").popInt32(value))
-					{
-						cout << "Server: received random change request : " << value << endl;
-						randomValue = value;
-						changeRandom = true;
-					}					
+
+				
 				}
 			}
 		}
@@ -524,16 +530,19 @@ srand((int)(time(NULL)));
 				std::cout << "Change Index to  : " << presetRequested << "\n";
 				app->selectPreset(presetRequested, false);
 			}
-			if (changeRandom == true)
+			if (changeRandom)
 			{
 				cout << "Changing Random : " << randomValue << endl;
 				changeRandom = false;
-				app->selectRandom(randomValue);
-				//app->setPresetLock(!app->isPresetLocked());
-				//bool randomValue = false;
-				//bool changeBeatSensitivity = false;
-				//bool beatSensitivityValue = false;
+				app->setShuffleEnabled(randomValue);
 			}
+			if (changeLock)
+			{
+				cout << "Changing Lock : " << lockValue << endl;
+				changeLock = false;
+				app->setPresetLock(lockValue);
+			}
+			
 
 
 
